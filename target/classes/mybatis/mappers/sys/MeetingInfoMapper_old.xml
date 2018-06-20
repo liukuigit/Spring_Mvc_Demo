@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.demo5.modules.sys.mapper.MeetingInfoMapper">
+
+	<resultMap type="com.demo5.modules.sys.entity.MeetingInfo"
+		id="resultMapId">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="MeetingPassword" jdbcType="VARCHAR" property="meetingPassword" />
+		<result column="Title" jdbcType="VARCHAR" property="title" />
+		<result column="Organizer" jdbcType="VARCHAR" property="organizer" />
+		<result column="Address" jdbcType="VARCHAR" property="address" />
+		<result column="LogoUrl" jdbcType="VARCHAR" property="logoUrl" />
+		<result column="StartTime" jdbcType="DATE" property="startTime" />
+		<result column="EndTime" jdbcType="DATE" property="endTime" />
+		<result column="MeetingDays" jdbcType="DECIMAL" property="meetingDays" />
+		<result column="MeetingDocUrl" jdbcType="VARCHAR" property="meetingDocUrl" />
+		<result column="SecurityClassification" jdbcType="VARCHAR"
+			property="securityClassification" />
+		<result column="CreatedTime" jdbcType="DATE" property="createdTime" />
+		<result column="CreatedBy" jdbcType="VARCHAR" property="createdBy" />
+		<result column="LastUpdatedTime" jdbcType="DATE" property="lastUpdatedTime" />
+		<result column="LastUpdatedBy" jdbcType="VARCHAR" property="lastUpdatedBy" />
+		<result column="Mstatus" jdbcType="VARCHAR" property="mstatus" />
+		<result column="SubTitle" jdbcType="VARCHAR" property="subTitle" />
+		<result column="DefaultNotion" jdbcType="VARCHAR" property="defaultNotion" />
+		<result column="MeetingType" jdbcType="VARCHAR" property="meetingType" />
+		<result column="IsCurrent" jdbcType="BIT" property="isCurrent" />
+
+	</resultMap>
+
+	<select id="get" parameterType="String" resultMap="resultMapId">
+		select * from ms_meetinginfo where id=#{id}
+	</select>
+	
+	<!-- 搜索条件判断 -->
+	<sql id="searchField">
+		<where>
+			<if test="bean.title != null and bean.title != ''">AND title LIKE CONCAT('%',#{bean.title},'%') </if>
+		</where>
+	</sql>
+	<!--=========================查询搜索 ============================================================================= -->
+	<select id="queryPages" parameterType="com.demo5.common.bean.Query"
+		resultMap="resultMapId">
+		select * from ms_meetinginfo
+		<include refid="searchField" />
+		
+			<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				order by id asc
+			</otherwise>
+		</choose>
+		
+		
+		LIMIT
+		#{startRow},#{pageSize}
+	</select>
+	
+	<select id="getCount" resultType="long"
+		parameterType="com.demo5.common.bean.Query">
+		select count(*) from ms_meetinginfo
+		<include refid="searchField" />
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="del" parameterType="String">
+		DELETE from ms_meetinginfo where
+		id=#{id}
+	</delete>
+	
+	<update id="updateByPrimaryKey" parameterType="com.demo5.modules.sys.entity.MeetingInfo">
+    update ms_meetinginfo
+    set title = #{title,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <insert id="insert" parameterType="com.demo5.modules.sys.entity.MeetingInfo" useGeneratedKeys="false" keyProperty="id">
+    insert into ms_meetinginfo (ID,MeetingPassword,Title,Organizer,Address,LogoUrl,
+StartTime,EndTime,MeetingDays,MeetingDocUrl,SecurityClassification,CreatedTime,CreatedBy,
+LastUpdatedTime,LastUpdatedBy,Mstatus,SubTitle,DefaultNotion,MeetingType,IsCurrent)
+    values (
+    #{ID,jdbcType=VARCHAR},#{MeetingPassword,jdbcType=VARCHAR},#{Title,jdbcType=VARCHAR},
+    #{Organizer,jdbcType=VARCHAR},#{Address,jdbcType=VARCHAR},#{LogoUrl,jdbcType=VARCHAR},
+#{StartTime,jdbcType=DATE},#{EndTime,jdbcType=DATE},#{MeetingDays,jdbcType=FLOAT},
+#{MeetingDocUrl,jdbcType=VARCHAR},#{SecurityClassification,jdbcType=VARCHAR},
+#{CreatedTime,jdbcType=DATE},#{CreatedBy,jdbcType=VARCHAR},
+#{LastUpdatedTime,jdbcType=DATE},#{LastUpdatedBy,jdbcType=VARCHAR},#{Mstatus,jdbcType=VARCHAR},
+#{SubTitle,jdbcType=VARCHAR},#{DefaultNotion,jdbcType=VARCHAR},#{MeetingType,jdbcType=VARCHAR},
+#{IsCurrent,jdbcType=BIT}
+      )
+  </insert>
+
+</mapper>

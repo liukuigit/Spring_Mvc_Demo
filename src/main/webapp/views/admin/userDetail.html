@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户 信息</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="/app/css/themes/default/jquery-ui.css" rel="stylesheet"
+	type="text/css" />
+<link href="/app/css/themes/Wijmo/jquery.wijmo.wijupload.css"
+	rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="/app/css/style.css" />
+<link rel="stylesheet" href="/app/css/main.css" />
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/jquery-ui-1.9.0.custom.min.js"></script>
+<script src="/app/scripts/jquery.ui.datepicker-zh-CN.js"
+	type="text/javascript"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wiscore.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wiscontrol.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/pas_wiscontrol.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wisgrid.js?v1"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wisupload.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisUI-lang-zh_cn.js"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/wijmo/jquery.wijmo-open.all.2.2.0.min.js"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/wijmo/source/jquery.wijmo.wijupload.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wisvalidate.js"></script>
+
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/cookiehelp.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/message.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/Common.js?v1"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/knockout/knockout-2.1.0.js"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/knockout/knockout.mapping.js"></script>
+	 <style type="text/css">
+        input
+        {
+            height: 26px;
+            line-height: 26px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+ <div class="popupContent">
+        <table style="width: 100%" class="table table-bordered wisgrid-wrap">
+            <tbody>
+                <tr>
+                    <td style="width: 120px;">
+                        用户名
+                    </td>
+                    <td>
+                        <label data-bind="text:useraccount" data-type="date" field="useraccount" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 120px;">
+                        姓名
+                    </td>
+                    <td>
+                        <label data-bind="text:username" data-type="date" field="username" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 120px;">
+                        部门
+                    </td>
+                    <td>
+                        <label data-bind="text:deptname" data-type="date" field="deptname" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        电话
+                    </td>
+                    <td>
+                        <label data-bind="text:mobile" data-type="date" field="mobile" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Email
+                    </td>
+                    <td>
+                        <label data-bind="text:email" data-type="date" field="email" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 120px;">
+                        状态
+                    </td>
+                    <td>
+                        <label data-bind="text:statename" data-type="date" field="statename" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 120px;">
+                        角色
+                    </td>
+                    <td>
+                        <label data-bind="text:others.roleName" data-type="date" field="others.roleName" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 120px;">
+                        创建时间
+                    </td>
+                    <td>
+                        <label data-bind="text:createdtime" data-type="date" field="createdtime" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 120px;">
+                        最后一次登录时间
+                    </td>
+                    <td>
+                        <label data-bind="text:lastlogin" data-type="date" field="lastlogin" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+ <script type="text/javascript">
+ 		 var handler = getContextPath()+"/userinfo/";
+         var viewModel = null;
+        
+
+        function loadData(id) {
+             var model ={};
+             //数据验证
+                if(id)
+                {
+                     var action =handler+ "getModel";
+                    jQuery.wisCore.syncAjax(action, {UserID: id}, function(res){
+                        if(res.success){
+                         model=res.data;   
+                        }
+                        else{
+                          jQuery.Alert(res.message);
+                        } 
+                    });
+
+                }
+                
+            viewModel =ko.mapping.fromJS(model); 
+            ko.applyBindings(viewModel);
+           
+        }
+
+    </script>
+</body>
+</html>

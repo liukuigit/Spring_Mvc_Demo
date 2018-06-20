@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会议列表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="/app/css/themes/default/jquery-ui.css" rel="stylesheet"
+	type="text/css" />
+<link href="/app/css/themes/Wijmo/jquery.wijmo.wijupload.css"
+	rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="/app/css/style.css" />
+<link rel="stylesheet" href="/app/css/main.css" />
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/jquery-ui-1.9.0.custom.min.js"></script>
+<script src="/app/scripts/jquery.ui.datepicker-zh-CN.js"
+	type="text/javascript"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wiscore.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wiscontrol.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/pas_wiscontrol.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wisgrid.js?v1"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wisupload.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisUI-lang-zh_cn.js"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/wijmo/jquery.wijmo-open.all.2.2.0.min.js"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/wijmo/source/jquery.wijmo.wijupload.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wisvalidate.js"></script>
+
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/cookiehelp.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/message.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/Common.js?v1"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/knockout/knockout-2.1.0.js"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/knockout/knockout.mapping.js"></script>
+	 <style type="text/css">
+        input
+        {
+            height: 26px;
+            line-height: 26px;
+        }
+    </style>
+</head>
+<body>
+	<div class="container">
+		<div class="tab_title">
+			<div class="tab_t_bt">会议管理</div>
+		</div>
+		<div class="r_search">
+			<table width="100%" cellpadding="0" cellspacing="0" id="tabSearch">
+				<tr>
+					<td style="width: 300px;">会议主题： <input type="text"
+						searchoperator="like" field="subtitle"
+						style="width: 190px; line-height: 26px;" />
+
+					</td>
+					<td style="width: 450px;">召开时间： <input type="text"
+						field="starttime" data-control="Datebox" style="width: 150px;" />
+						&nbsp;到&nbsp; <input type="text" field="endtime"
+						data-control="Datebox" style="width: 150px;" />
+					</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>主办单位： <input type="text" searchoperator="like"
+						field="organizer" style="width: 190px;" />
+					</td>
+					<td>会议类型： <select searchoperator="equal" field="meetingtype">
+							<option value="">全部</option>
+							<option value="初评">初评</option>
+							<option value="复评">复评</option>
+					</select> &nbsp; &nbsp;
+						<button class="b_search" type="button" id="btnSearch">查找</button>
+					</td>
+					<td>&nbsp;</td>
+				</tr>
+			</table>
+		</div>
+		<div class="r_search">
+			<button class="b_tianjia" type="button" id="btnAddMeeting">
+				添加会议</button>
+		</div>
+		<div id="grid_module"></div>
+
+
+	</div>
+
+	<div id="AddMeeting" class="popupWindow">
+		<iframe id="f_AddMeeting" name="f_AddMeeting" src=""
+			scrolling="no" width="100%" height="100%" frameborder="0"></iframe>
+	</div>
+	<div id="MeetingDetail" class="popupWindow">
+		<iframe id="f_MeetingDetail" name="f_MeetingDetail"
+			src="meetingDetail.html" scrolling="auto" width="100%" height="100%"
+			frameborder="0"></iframe>
+	</div>
+	<div id="PersonList" class="popupWindow"></div>
+	<script type="text/javascript">
+		var handler = getContextPath()+"/meeting/";
+		
+
+		jQuery(function() {
+			init();
+			//加载会议列表
+			module_grid();
+			//绑定保存按钮
+			jQuery("#btnAddMeeting").bind("click", function() {
+				showDiv(null, true);
+			});
+			jQuery("#btnSearch").bind("click", function() {
+				showGrid();
+			});
+			showDiv(null, false);
+			showMeetingDetail(null, false);
+		});
+		function init() {
+			//绑定日期
+			jQuery("[data-control='Datebox']").datepicker({
+				dateFormat : "yy-mm-dd",
+				changeMonth : true,
+				changeYear : true
+			});
+		}
+		//获得检索条件
+		function getWhere() {
+			return jQuery.pasCore.getWhere(jQuery("#tabSearch"));
+		}
+
+		//查询数据
+		function showGrid() {
+			var params = getWhere();
+
+			jQuery('#grid_module').wisgrid({
+				queryParams : params,
+				pageNumber : 1
+			});
+		}
+		function module_grid() {
+
+			var params = getWhere();
+
+			jQuery("#grid_module")
+					.wisgrid(
+							{
+								width : '100%',
+								idField : 'ID',
+								url : handler+"getList",
+								queryParams : params,
+								pagination : true,
+								pageNumber : 1,
+								pageSize : 10,
+								checkbox : false,
+								showEmptyRowText : true,
+								onLoadSuccess : function() {
+
+								},
+								columns : [
+
+										{
+											title : "会议主题",
+											field : 'subtitle',
+											align : 'left',
+											formatter : function(val, row) {
+
+												var link = jQuery("<a />")
+														.attr("href",
+																"javascript:void(0);")
+														.html(val)
+														.bind(
+																"click",
+																function() {
+																	showMeetingDetail(
+																			row.id,
+																			true);
+																});
+												return link;
+											}
+										},
+										{
+											title : "会议开始时间",
+											field : 'starttime',
+											width : '120',
+											align : 'left',
+											formatter : function(val, row) {
+												var time = val == null ? ""
+														: val.substring(0, 16);
+												//                time += "</br/>";
+												//                time += row.EndTime == null ? "" : row.EndTime.substring(0, 16);
+												return time;
+											}
+										},
+										{
+											title : "会议结束时间",
+											field : 'endtime',
+											width : '120',
+											align : 'left',
+											formatter : function(val, row) {
+												var time = val == null ? ""
+														: val.substring(0, 16);
+												//                time += "</br/>";
+												//                time += row.EndTime == null ? "" : row.EndTime.substring(0, 16);
+												return time;
+											}
+										},
+
+										{
+											title : "主办单位",
+											field : 'organizer',
+											width : '250',
+											align : 'left',
+											formatter : function(val, row) {
+												var div = jQuery("<div/>")
+														.html(val);
+												return div;
+											}
+										},
+										{
+											title : "类型",
+											field : 'meetingtype',
+											width : '50',
+											align : 'left',
+											formatter : function(val, row) {
+												return val;
+
+											}
+										},
+										{
+											title : "操作",
+											field : '_Edit',
+											width : '240',
+											align : 'center',
+											formatter : function(val, row) {
+
+												var div = jQuery("<div/>");
+
+												var link = jQuery(
+														"<a style='margin-left:5px;' href='javascript:void(0);'/>")
+														.text("维护参会专家");
+												link
+														.attr(
+																"href",
+																"MeetingPersonList.aspx?MType="
+																		+ row.MeetingType
+																		+ "&meetingID="
+																		+ row.ID)
+														.appendTo(div);
+
+												var manage = jQuery(
+														"<a style='margin-left:10px;'/>")
+														.text("资料管理");
+												manage
+														.attr(
+																"href",
+																"DocumentList.aspx?doctype=2&meetingID="
+																		+ row.ID
+																		+ "&MType="
+																		+ row.MeetingType)
+														.appendTo(div);
+
+												var createData = jQuery(
+														"<a style='margin-left:10px;' href='javascript:void(0);'/>")
+														.text("生成数据包");
+												createData.appendTo(div);
+												createData
+														.bind(
+																"click",
+																function() {
+																	CreateMeetingData(row);
+																});
+
+												return div
+											}
+
+										},
+										{
+											title : "操作",
+											field : '_Edit',
+											width : '75',
+											align : 'center',
+											formatter : function(val, row) {
+
+												var div = jQuery("<div/>");
+
+												var link = jQuery(
+														"<a style='margin-left:5px;' href='javascript:void(0);'/>")
+														.text("编辑");
+												link.bind("click", function() {
+													showDiv(row.ID, true);
+												}).appendTo(div);
+
+												var del = jQuery(
+														"<a style='margin-left:5px;' href='javascript:void(0);'/>")
+														.text("删除").appendTo(
+																div);
+												del.bind("click", function() {
+													delData(row.id);
+												});
+
+												return div;
+											}
+										} ]
+							});
+
+		}
+
+		function showDiv(id, open) {
+
+			$("#AddMeeting")
+					.dialog(
+							{
+								resizable : false,
+								autoOpen : false,
+								width : 450,
+								height : 550,
+								title : "会议信息",
+								modal : true,
+								open : function() {
+
+									document.getElementById("f_AddMeeting").contentWindow
+											.loadData(id);
+
+								},
+								close : function() {
+									$(".wisui-validate").hide();
+								},
+								buttons : {
+									"确认" : function() {
+										if (saveData()) {
+											$(this).dialog("close");
+											showGrid();
+										}
+									},
+									"取消" : function() {
+
+										$(this).dialog("close");
+									}
+								}
+							});
+			if (open) {
+				$("#AddMeeting").dialog("open");
+			}
+			//   loadData(id);
+		}
+		//保存会议信息
+		function saveData() {
+
+			if (!document.getElementById("f_AddMeeting").contentWindow
+					.validFrom()) {
+				return false;
+			}
+			var formData = document.getElementById("f_AddMeeting").contentWindow
+					.GetData();
+
+			var flag = false;
+
+			var model = JSON.parse(formData["data"]);
+			var messageid = model.ID ? "PASG90010I109" : "PASG90010I107";
+			var action = "SaveData";
+			jQuery.wisCore.syncAction(handler, action, formData, function(res) {
+				if (res.success) {
+					jQuery.Alert($.getmessage(messageid)); //保存成功提示
+					flag = true;
+				} else {
+					jQuery.Alert(res.message);
+				}
+			});
+			return flag;
+		}
+
+		//删除PAD
+		function delData(id) {
+			jQuery.Confirm($.getmessage("PASG90010I14222"), null, function() {
+
+				var url = "del";
+				jQuery.wisCore.syncAjax(handler+url, {
+					ID : id
+				}, function(res) {
+					if (res.success) {
+
+						jQuery.Alert($.getmessage("PASG90010I105"), null,
+								function() {
+									showGrid(); //删除之后重新加载数据
+								});
+					} else {
+						jQuery.Alert($.getmessage(res.message));
+					}
+				});
+			}, null);
+		}
+
+		//下载数据包
+		function downLoadData(row) {
+
+			jQuery
+					.Confirm(
+							$.getmessage("PASG90010I103"),
+							null,
+							function() {
+
+								var action = "downLoadData";
+								var formData = {
+									ID : row.ID
+								};
+								LoadingToggle(true, $
+										.getmessage("PASG90010I143"));
+								jQuery.wisCore
+										.invokeAction(
+												handler,
+												action,
+												formData,
+												function(res) {
+													if (res.success) {
+														if (res.attributes == null
+																|| typeof (res.attributes) == 'undefined') {
+															jQuery
+																	.Alert($
+																			.getmessage("PASG90010I128")); //数据包下载成功
+															flag = true;
+														} else {
+
+															window.location.href = "http://"
+																	+ window.location.host
+																	+ "/"
+																	+ res.attributes;
+														}
+													} else {
+
+														jQuery
+																.Alert($
+																		.getmessage(res.message));
+													}
+													LoadingToggle(false);
+												});
+							}, null)
+
+		}
+
+		//设置为当前活动会议
+		function ChangeCurrentMeeting(ID) {
+
+			jQuery.Confirm($.getmessage("PASG90010I14240"), null, function() {
+
+				var action = "ChangeCurrentMeeting";
+				jQuery.wisCore.syncAction(handler, action, {
+					ID : ID
+				}, function(res) {
+					if (res.success) {
+
+						jQuery.Alert($.getmessage("PASG01020I003"), null,
+								function() {
+									showGrid(); //设置之后重新加载数据
+								});
+					} else {
+						jQuery.Alert($.getmessage(res.message));
+					}
+				});
+			}, null);
+		}
+
+		//生成数据包
+		function CreateMeetingData(row) {
+
+			jQuery.Confirm($.getmessage("PASG90010I14248"), null, function() {
+
+				var action = "CreateMeetingData";
+
+				LoadingToggle(true, $.getmessage("PASG90010I14251"));
+				jQuery.wisCore.invokeAction(handler, action, {
+					ID : row.ID,
+					meetingType : row.MeetingType
+				}, function(res) {
+					if (res.success) {
+
+						jQuery.Alert($.getmessage("PASG90010I14249"), null,
+								function() {
+									showGrid(); //设置之后重新加载数据
+								});
+					} else {
+						if (res.errorCode == 110) {
+							jQuery.Alert($.getmessage(res.message), null, null,
+									400, 300);
+						} else {
+							jQuery.Alert($.getmessage(res.message));
+						}
+
+					}
+					LoadingToggle(false);
+				});
+
+			}, null, 350);
+		}
+		
+
+		//显示会议详细信息
+		function showMeetingDetail(id, open) {
+
+		    $("#MeetingDetail").dialog({
+		        resizable: false,
+		        autoOpen: false,
+		        width: 500,
+		        height: 500,
+		        title: "会议信息",
+		        modal: true,
+		        open: function () {
+
+		            document.getElementById("f_MeetingDetail").contentWindow.loadData(id);
+
+		        },
+		        close: function () {
+		            
+		        },
+		        buttons: {
+		            "关闭": function () {
+
+		                $(this).dialog("close");
+		            }
+		        }
+		    });
+		    if (open) {
+		        $("#MeetingDetail").dialog("open");
+		    }
+
+		}
+	</script>
+</body>
+</html>

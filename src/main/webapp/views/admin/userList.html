@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>会议列表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="/app/css/themes/default/jquery-ui.css" rel="stylesheet"
+	type="text/css" />
+<link href="/app/css/themes/Wijmo/jquery.wijmo.wijupload.css"
+	rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="/app/css/style.css" />
+<link rel="stylesheet" href="/app/css/main.css" />
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/jquery-ui-1.9.0.custom.min.js"></script>
+<script src="/app/scripts/jquery.ui.datepicker-zh-CN.js"
+	type="text/javascript"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wiscore.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wiscontrol.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/pas_wiscontrol.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wisgrid.js?v1"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wisupload.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisUI-lang-zh_cn.js"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/wijmo/jquery.wijmo-open.all.2.2.0.min.js"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/wijmo/source/jquery.wijmo.wijupload.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/wisui/wisvalidate.js"></script>
+
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/cookiehelp.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/message.js"></script>
+<script type="text/javascript" language="javascript"
+	src="/app/scripts/Common.js?v1"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/knockout/knockout-2.1.0.js"></script>
+<script language="javascript" type="text/javascript"
+	src="/app/scripts/knockout/knockout.mapping.js"></script>
+	 <style type="text/css">
+        input
+        {
+            height: 26px;
+            line-height: 26px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+<div class="tab_title">
+        <div class="tab_t_bt">
+            系统管理 > 用户管理</div>
+    </div>
+    <div class="r_search">
+        <table width="100%" cellpadding="0" cellspacing="0" id="tabSearch">
+            <tr>
+            <td style="width: 300px;">
+                    用户名：
+                    <input type="text" searchoperator="like" field="useraccount" style="width: 190px;" />
+                </td>
+                <td style="width: 300px;">
+                    姓名：
+                    <input type="text" searchoperator="like" field="username" style="width: 190px;" />
+                </td>
+                <td style="width: 150px;">
+                    状态：
+                    <select field="stateid" searchoperator="equal" style="width: 100px;">
+                        <option value="">全部</option>
+                        <option value="1">已激活</option>
+                        <option value="2">已关闭</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="b_search" type="button" id="btnSearch">
+                        查找</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: left">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="r_search">
+        <button class="b_tianjia" type="button" id="btnAddUser">
+            添加用户</button>
+            &nbsp;&nbsp;
+ <button class="b_tianjia" type="button" id="btnDownAdminData">
+            下载管理账号到PAD</button>
+    </div>
+    <div id="grid_module">
+    </div>
+    <div style="display: none" id="AddUser" class="popupContent">
+        <table width="100%" class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td style="width: 100px;">
+                        用户名<span class="red">*</span>
+                    </td>
+                    <td>
+                        <input type="text" id="UserAccount" name="UserAccount" field="UserAccount" data-bind="value:UserAccount"
+                            maxlength="30" data-control="Text" pas_null="true" class="input300" mesid="PASG90010I14208" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        姓名<span class="red">*</span>
+                    </td>
+                    <td>
+                        <input type="text" id="UserName" name="UserName" data-bind="value:UserName" class="input300"
+                            maxlength="30" data-control="Text" pas_null="true" field="UserName" mesid="PASG90010I14201" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        部门
+                    </td>
+                    <td>
+                        <input type="text" id="DeptName" name="DeptName" data-bind="value:DeptName" class="input300"
+                            maxlength="30" data-control="Text" field="DeptName" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        电话
+                    </td>
+                    <td>
+                        <input type="text" id="Mobile" name="Mobile" data-bind="value:Mobile" class="input300"
+                            maxlength="30" data-control="Text" field="Mobile" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Email
+                    </td>
+                    <td>
+                        <input type="text" id="Email" name="Email" data-bind="value:Email" class="input300"
+                            maxlength="50" data-control="Text" pas_valid="MAIL" field="Email" mesid="PASG90010I14202" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        状态
+                    </td>
+                    <td>
+                        <select data-bind="value:StateID" field="StateID" style="width: 100px;">
+                            <option value="1">激活</option>
+                            <option value="2">关闭</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        角色
+                    </td>
+                    <td style="margin: 0px; padding: 5px;">
+                        <div id="grid_role" style="margin: 0px; padding: 0px;">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    
+</div>
+
+
+ <div id="UserDetail" class="popupWindow">
+        <iframe id="f_UserDetail" name="f_UserDetail" src="userDetail.html" scrolling="auto"
+            width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+    <script type="text/javascript">
+        var handler = getContextPath()+"/userinfo/";
+         var viewModel = null;
+        jQuery(function () {
+            //加载用户列表
+            module_grid();
+            grid_role();
+            //绑定保存按钮
+            jQuery("#btnAddUser").bind("click",function(){
+                showDiv(null);
+            });
+            //查询
+             jQuery("#btnSearch").bind("click",function(){
+               showGrid();
+            });
+
+            //下载管理账户到PAD
+            jQuery("#btnDownAdminData").bind("click",function(){
+                downLoadData();
+            });
+
+            showUserDetail(null,false);
+        });
+        
+        //获得检索条件
+        function getWhere()
+        {
+            return jQuery.pasCore.getWhere(jQuery("#tabSearch"));
+        }
+        //查询数据
+        function showGrid() {
+            var params = getWhere();
+            jQuery('#grid_module').wisgrid({ queryParams: params,pageNumber:1 });
+        }
+        function module_grid() {
+
+            var params =getWhere();
+            jQuery("#grid_module").wisgrid({
+                width: '100%',
+                idField: 'userid',
+                url: handler+'getList',
+                queryParams: params,
+                pagination: true,
+                pageNumber: 1,
+                pageSize: 10,
+                checkbox: false,
+                showEmptyRowText: true,
+                onLoadSuccess: function () {
+
+
+                },
+                columns: [
+            { title: "用户名", field: 'useraccount', width: '15%', align: 'left',formatter:function(val,row){
+                var link = jQuery("<a />").attr("href", "javascript:void(0);").html(val).bind("click", function () {
+                    showUserDetail(row.userid, true);
+                });
+                return link;
+            } },
+            { title: "姓名", field: 'username', width: '15%', align: 'left', formatter: function (val, row) {
+
+                return val;
+            }
+            },
+            { title: "部门", field: 'deptname', width: '20%', align: 'left' },
+            { title: "角色", field: 'userrolename', width:'20%', align: 'left', formatter: function (val, row) {
+                return val == null ? "" : val;
+            }
+            },
+            { title: "状态", field: 'statename', width: '10%', align: 'left', formatter: function (val, row) {
+                return val == null ? "" : "已"+val;
+            }
+            },
+            { title: "操作", field: '_Edit', width: '15%', align: 'center', formatter: function (val, row) {
+                
+            
+                var div = jQuery("<div/>");
+                //row.Mstatus==1为系统默认管理员账户，不能编辑和删除。
+                if(row.Mstatus !="1" ||  (row.Mstatus =="1" && row.UserAccount == ''))
+                {
+                    var link = jQuery("<a style='margin-left:10px;' href='javascript:void(0);'/>").text("编辑");
+                    link.bind("click", function () {
+                        showDiv(row.userid);
+                    }).appendTo(div);
+
+                    var stateId= row.stateid;
+                
+                    var btnclose="关闭";
+                    if(stateId ==2)
+                    {
+                        btnclose="激活"
+                    }
+               }
+             if(row.mstatus !="1")
+                {
+                    var del= jQuery("<a style='margin-left:10px;' href='javascript:void(0);'/>").text("删除").appendTo(div);
+                    del.bind("click",function(){
+                        delData(row.userid);
+                    });
+
+                    var close= jQuery("<a style='margin-left:10px;' href='javascript:void(0);'/>").text(btnclose).appendTo(div);
+                    close.bind("click",function(){
+                        disableUser(row.userid,stateId==2?1:2);
+                    }); 
+                }
+
+                //超级管理员
+                if('admin' =='admin')
+                {
+                    var reset = jQuery("<a style='margin-left:10px;' href='javascript:void(0);'/>").text("重置密码").appendTo(div);
+                      reset.bind("click",function(){
+                        resetPwd(row.userid);
+                    });
+                }
+
+                return div;
+                
+                
+            }
+            }
+        ]
+            });
+
+        }
+
+        function loadData(userid) { 
+            
+             var model = {};
+             //数据验证
+            
+                if(userid)
+                {
+                     var action = "getModel";
+                    jQuery.wisCore.syncAjax(handler, {UserID: userid}, function(res){
+                        if(res.success){
+                         model=res.data;     
+                        }
+                        else{
+                          jQuery.Alert(res.message);
+                        } 
+                    });
+                }
+             viewModel = ko.mapping.fromJS(model);
+             removeBingding();
+             ko.applyBindings(viewModel);
+
+              jQuery("#grid_role").find("[type='checkbox']").attr("checked",false);
+              if(model.userRoleList !=null && typeof(model.userRoleList) !='undefined')
+              {
+                 jQuery.each(model.userRoleList,function(i,r){
+                    jQuery("#grid_role").find("input[value='"+r.RoleID+"']").attr("checked",true);
+                 });
+             }
+
+             if(userid)
+             {
+                jQuery("#UserAccount").attr("ReadOnly",true).attr("disabled",true);
+             }else
+             {
+                jQuery("#UserAccount").removeAttr("readOnly").removeAttr("disabled").bind("blur",function(){
+                    ValidUserAccount(jQuery(this).val());
+                });
+             }
+
+             //getUserRole(userid);
+        }
+
+          //移除knockout绑定
+        function removeBingding(){  
+
+            jQuery("[data-bind]").each(function(){
+                ko.cleanNode(jQuery(this).get(0));  
+            });
+        }
+
+        function showDiv(userid) {
+            loadData(userid);
+
+            var title ="用户信息";
+            if(userid)
+            {
+                title="编辑用户";
+            }
+
+            $("#AddUser").dialog({
+                resizable: false,
+                width: 570,
+                height: 650,
+                position: { using: function (pos) {
+                var wHeight = $(window).height();
+                var dHeight = $(parent.document).height();
+                var topOffset = $(this).css(pos).offset().top;
+                var scrollTop = parent.document.documentElement.scrollTop;
+                scrollTop = (scrollTop > 75) ? scrollTop - 75 : 10;
+                if (scrollTop < 10) {
+                    scrollTop = 10;
+                }
+                $(this).css('top', scrollTop);
+            }
+            },
+                title: title,
+                modal: true,
+                close:function(){
+                    
+                     $("[validate-no]", $("#AddUser")).removeAttr("validate-no");
+                    $(".wisui-validate", $("#AddUser")).remove();
+                },
+                buttons: {
+                    "确认": function () {
+                       if( saveData())
+                       {
+                        $(this).dialog("close");
+                        showGrid();
+                        }
+                    },
+                    "取消": function () {
+                     //$(".wisui-validate").hide();
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        }
+
+        function ValidUserAccount(UserAccount)
+        {
+            var flag=true;
+            var action=handler+"ValidUserAccount";
+             jQuery.wisCore.syncAjax(action, {UserAccount:UserAccount}, function(res){
+                if(res.success == false){
+                
+                    if(res.errorCode ==10) //验证消息：员工号已存在。
+                    {   flag=false;
+                        jQuery("#UserAccount").focus();
+                        $.wisvalidate.showError(jQuery("#UserAccount"), $.getmessage(res.message));
+                        
+                    }
+                } 
+            });
+           
+            return flag;
+        }
+
+        //保存用户信息
+        function saveData(){
+
+            var flag=false;
+           var  formData ={};
+            formData["data"]= ko.mapping.toJSON(viewModel);
+            
+             var model = JSON.parse(formData["data"]);
+            var messageid = model.UserID ? "PASG90010I109" : "PASG90010I107";
+            var valid=true;
+            if(!Pas_validate(jQuery("#AddUser")) )
+            {
+                valid=false;
+            }
+             if(model.UserID ==null && !ValidUserAccount(jQuery("#UserAccount").val()))
+            {
+                 valid=false;
+            }
+             var rows =jQuery("#grid_role").wisgrid("getSelections");
+            if(rows.length ==0)
+            {
+             $.wisvalidate.showError(jQuery("#grid_role").find("table:first"), $.getmessage("PASG90010I14203"));
+            valid=false;
+            }
+            if(!valid)
+            {
+                return false;
+            }
+           
+           
+            var roles=ko.mapping.toJSON(rows);
+            formData["roles"]=roles;
+            var action = handler+"SaveUser";
+            jQuery.wisCore.syncAjax(action, formData, function(res){
+                if(res.success){
+                    jQuery.Alert($.getmessage(messageid));//保存成功提示
+                    flag=true;
+                }
+                else{
+                    if(res.errorCode ==10) //验证消息：员工号已存在。
+                    {
+                        $.wisvalidate.showError(jQuery("#UserAccount"), $.getmessage(res.message));
+                        flag=false;
+                        return ;
+                    }
+                    jQuery.Alert(res.message);
+                } 
+            });
+            return flag;
+        }
+
+        //删除用户
+        function delData(userid)
+        {
+            jQuery.Confirm($.getmessage("PASG90010I14204"),null,function(){
+           
+             var action =handler+ "DelUser";
+            jQuery.wisCore.syncAajx(handler, {UserID: userid}, function(res){
+                if(res.success){
+                jQuery.Alert($.getmessage("PASG90010I105"), null, function () {
+                            showGrid();//删除之后重新加载数据
+                        });
+                    
+                }
+                else{
+                    jQuery.Alert(res.message);
+                } 
+            });
+            },null);
+        }
+
+        //停用用户
+        function disableUser(userid,stateId)
+        {
+            var mes='PASG90010I116'; //停用提示
+            if(stateId==1)
+            {
+                mes='PASG90010I117'; //启用提示
+            }
+            //确定停用提示
+            jQuery.Confirm($.getmessage(mes),null,function(){
+            
+             var action = handler+"DisableUser";
+            jQuery.wisCore.syncAjax(action, {UserID: userid,StateId:stateId}, function(res){
+                if(res.success){
+                    showGrid();//停用用户之后重新加载数据
+                }
+                else{
+                    jQuery.Alert(res.message);
+                } 
+            });
+            },null);
+        }
+        
+       
+
+
+         function reload_role() {
+            var params = null;
+            jQuery('#grid_role').wisgrid({ queryParams: params });
+        }
+
+
+        //加载角色列表
+          function grid_role() {
+
+            var params =null;
+            jQuery("#grid_role").wisgrid({
+                width: '90%',
+                idField: 'RoleID',
+                url: handler+"getRoleList",
+                queryParams: params,
+                pagination: false,
+                pageNumber: 1,
+                pageSize: 10,
+                checkbox: true,
+                showEmptyRowText: true,
+                onLoadSuccess: function () {
+
+                   
+
+                },
+                columns: [
+
+                 { title: "角色名称", field: 'RoleName', width: 230, align: 'left' }
+            ]
+            });
+
+        }
+
+        //获取用户角色
+        function getUserRole(userid)
+        {
+            jQuery("#grid_role").find("[type='checkbox']").attr("checked",false);
+            if(userid !=null && typeof(userid) !='undefined')
+            {
+               var action = "GetUserRole";
+                jQuery.wisCore.syncAction(handler, action, {userAccount: userid}, function(res){
+            
+                    if(res.success){
+                        jQuery.each(res.data,function(i,r){
+                            jQuery("#grid_role").find("input[value='"+r.RoleID+"']").attr("checked",true);
+                       });
+
+                    }
+                    else{
+                   
+                        jQuery.Alert(res.message);
+                    } 
+                });
+            }
+        }
+
+        //保存用户角色设置
+       function saveUserRole(row)
+       {    
+            var flag=false;
+            var rows =jQuery("#grid_role").wisgrid("getSelections");
+            if(rows.length ==0)
+            {
+                 jQuery.Alert($.getmessage("PASG90010I122"));
+                return flag;
+            }
+            var roles=ko.mapping.toJSON(rows);
+              var action = "SaveUserRole";
+            jQuery.wisCore.syncAction(handler, action, {userAccount: row.UserAccount,roles:roles}, function(res){
+                if(res.success){
+                   jQuery.Alert($.getmessage("PASG01020I003"));//保存成功提示
+                    flag=true;
+                    return;
+                }
+                else{
+                    jQuery.Alert(res.message);
+                } 
+            });
+            return flag;
+       }
+
+
+       
+        //显示用户详细信息
+        function showUserDetail(id, open) {
+
+            $("#UserDetail").dialog({
+                resizable: false,
+                autoOpen: false,
+                width: 500,
+                height: 550,
+                title: "用户信息",
+                modal: true,
+                open: function () {
+
+                    document.getElementById("f_UserDetail").contentWindow.loadData(id);
+
+                },
+                close: function () {
+            
+                },
+                buttons: {
+                    "关闭": function () {
+
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            if (open) {
+                $("#UserDetail").dialog("open");
+            }
+
+        }
+
+        //重置密码
+        function resetPwd(userid){
+        
+             jQuery.Confirm($.getmessage("PASG90010I14229"),null,function(){
+           
+                     var action = "resetPwd";
+                    jQuery.wisCore.syncAction(handler, action, {UserID: userid}, function(res){
+                        if(res.success){
+                        jQuery.Alert($.getmessage("PASG90010I14230"), null, function () {
+                                    
+                                });
+                    
+                        }
+                        else{
+                            jQuery.Alert($.getmessage(res.message));
+                        } 
+                    });
+                    },null);
+        }
+
+
+        //下载管理数据包到PAD
+        function downLoadData(row) {
+
+            jQuery.Confirm($.getmessage("PASG90010I14263"), null, function () {
+
+                var action = "downLoadData";
+                var formData = { };
+                LoadingToggle(true, $.getmessage("PASG90010I143"));
+                jQuery.wisCore.invokeAction(handler, action, formData, function (res) {
+                    if (res.success) {
+                        if (res.attributes == null || typeof (res.attributes) == 'undefined') {
+                            jQuery.Alert($.getmessage("PASG90010I128")); //数据包下载成功
+                            flag = true;
+                        } else {
+
+                            window.location.href = "http://" + window.location.host + "/" + res.attributes;
+                        }
+                    }
+                    else {
+
+                        jQuery.Alert($.getmessage(res.message));
+                    }
+                    LoadingToggle(false);
+                });
+            }, null)
+
+        }
+
+    </script>
+</body>
+</html>

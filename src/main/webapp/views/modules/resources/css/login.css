@@ -1,0 +1,17 @@
+body { padding: 0; margin: 0; font:12px  Arial, Helvetica, sans-serif; background:url(../images/login_bg.png) no-repeat top  center  }
+img{border:0;}
+ul{ margin: 0; padding : 0; list-style : none; }
+li{line-height:160%; list-style:none;}
+a{color: #4383C4;text-decoration: none;}
+a:hover {color: #4383C4;text-decoration: none;	}
+
+.counter { width:100%; margin:0 auto ; height:500px; padding-top:170px;   }
+.title{  width:100%; margin:0 auto 30px auto ; text-align:center;color:#FFFFFF; font-size:38px; font-weight:bold;}
+.login_div{margin:0 auto ; width: 692px; height:334px;background:url(../images/logininfo.png) no-repeat top  center}
+.login{padding:100px 0 0 272px; }
+.login td{ height:40px; line-height:40px; color:#000; padding:2px 0;}
+.i_login{float:left ;width: 37px; height:36px;  margin:0 0 0 15px;border:1px solid  #D0D0D0 ;border-right:0    ;}
+.input300{ height:34px;width:300px; padding-left:5px;  line-height:34px;border:1px solid #BFBFBF; color:#333; font-size:15px}
+.b_dl { background: url(../images/b_dl.jpg) repeat-x left top;width:345px; border:0;height:38px;line-height:38px; text-align: center; cursor:pointer;  color:#fff; font:18px  ΢ź, Helvetica, sans-serif; margin:15px 0 0 15px;  border-radius: 5px ;border-radius: ul ur lr ll; }
+
+

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo5.modules.sys.mapper.MeetingInfoMapper">
+  <resultMap id="BaseResultMap" type="com.demo5.modules.sys.entity.MeetingInfo">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="MeetingPassword" jdbcType="VARCHAR" property="meetingpassword" />
+    <result column="Title" jdbcType="VARCHAR" property="title" />
+    <result column="Organizer" jdbcType="VARCHAR" property="organizer" />
+    <result column="Address" jdbcType="VARCHAR" property="address" />
+    <result column="LogoUrl" jdbcType="VARCHAR" property="logourl" />
+    <result column="StartTime" jdbcType="TIMESTAMP" property="starttime" />
+    <result column="EndTime" jdbcType="TIMESTAMP" property="endtime" />
+    <result column="MeetingDays" jdbcType="DECIMAL" property="meetingdays" />
+    <result column="MeetingDocUrl" jdbcType="VARCHAR" property="meetingdocurl" />
+    <result column="SecurityClassification" jdbcType="VARCHAR" property="securityclassification" />
+    <result column="CreatedTime" jdbcType="TIMESTAMP" property="createdtime" />
+    <result column="CreatedBy" jdbcType="VARCHAR" property="createdby" />
+    <result column="LastUpdatedTime" jdbcType="TIMESTAMP" property="lastupdatedtime" />
+    <result column="LastUpdatedBy" jdbcType="VARCHAR" property="lastupdatedby" />
+    <result column="Mstatus" jdbcType="VARCHAR" property="mstatus" />
+    <result column="SubTitle" jdbcType="VARCHAR" property="subtitle" />
+    <result column="DefaultNotion" jdbcType="VARCHAR" property="defaultnotion" />
+    <result column="MeetingType" jdbcType="VARCHAR" property="meetingtype" />
+    <result column="IsCurrent" jdbcType="BIT" property="iscurrent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, MeetingPassword, Title, Organizer, Address, LogoUrl, StartTime, EndTime, MeetingDays, 
+    MeetingDocUrl, SecurityClassification, CreatedTime, CreatedBy, LastUpdatedTime, LastUpdatedBy, 
+    Mstatus, SubTitle, DefaultNotion, MeetingType, IsCurrent
+  </sql>
+  
+  
+  <!-- 搜索条件判断 -->
+	<sql id="searchField">
+		<where>
+			<if test="bean.subtitle != null and bean.subtitle != ''">AND subtitle LIKE CONCAT('%',#{bean.subtitle},'%') </if>
+			<if test="bean.organizer !=null and bean.organizer !='' ">AND organizer LIKE CONCAT('%',#{bean.organizer},'%')</if>
+			<if test="bean.meetingtype !=null and bean.meetingtype !='' ">AND meetingtype = #{bean.meetingtype}</if>
+			<if test="bean.starttime !=null "><![CDATA[AND starttime >=#{bean.starttime,jdbcType=DATE} ]]></if>
+			<if test="bean.endtime !=null "><![CDATA[AND endtime <=#{bean.endtime,jdbcType=DATE}]]></if>
+		</where>
+	</sql>
+	<!--=========================查询搜索 ============================================================================= -->
+	<select id="queryPages" parameterType="com.demo5.common.bean.Query"
+		resultMap="BaseResultMap">
+		select  
+		<include refid="Base_Column_List"></include>
+		from ms_meetinginfo
+		<include refid="searchField" />
+			<choose>
+			<when test="orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				order by id asc
+			</otherwise>
+		</choose>
+		
+		
+		LIMIT
+		#{startRow},#{pageSize}
+	</select>
+	
+	<select id="getCount" resultType="long"
+		parameterType="com.demo5.common.bean.Query">
+		select count(*) from ms_meetinginfo
+		<include refid="searchField" />
+	</select>
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ms_meetinginfo
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ms_meetinginfo
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.demo5.modules.sys.entity.MeetingInfo">
+    insert into ms_meetinginfo (ID, MeetingPassword, Title, 
+      Organizer, Address, LogoUrl, 
+      StartTime, EndTime, MeetingDays, 
+      MeetingDocUrl, SecurityClassification, 
+      CreatedTime, CreatedBy, LastUpdatedTime, 
+      LastUpdatedBy, Mstatus, SubTitle, 
+      DefaultNotion, MeetingType, IsCurrent
+      )
+    values (#{id,jdbcType=VARCHAR}, #{meetingpassword,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{organizer,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{logourl,jdbcType=VARCHAR}, 
+      #{starttime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{meetingdays,jdbcType=DECIMAL}, 
+      #{meetingdocurl,jdbcType=VARCHAR}, #{securityclassification,jdbcType=VARCHAR}, 
+      #{createdtime,jdbcType=TIMESTAMP}, #{createdby,jdbcType=VARCHAR}, #{lastupdatedtime,jdbcType=TIMESTAMP}, 
+      #{lastupdatedby,jdbcType=VARCHAR}, #{mstatus,jdbcType=VARCHAR}, #{subtitle,jdbcType=VARCHAR}, 
+      #{defaultnotion,jdbcType=VARCHAR}, #{meetingtype,jdbcType=VARCHAR}, #{iscurrent,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.demo5.modules.sys.entity.MeetingInfo">
+    insert into ms_meetinginfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="meetingpassword != null">
+        MeetingPassword,
+      </if>
+      <if test="title != null">
+        Title,
+      </if>
+      <if test="organizer != null">
+        Organizer,
+      </if>
+      <if test="address != null">
+        Address,
+      </if>
+      <if test="logourl != null">
+        LogoUrl,
+      </if>
+      <if test="starttime != null">
+        StartTime,
+      </if>
+      <if test="endtime != null">
+        EndTime,
+      </if>
+      <if test="meetingdays != null">
+        MeetingDays,
+      </if>
+      <if test="meetingdocurl != null">
+        MeetingDocUrl,
+      </if>
+      <if test="securityclassification != null">
+        SecurityClassification,
+      </if>
+      <if test="createdtime != null">
+        CreatedTime,
+      </if>
+      <if test="createdby != null">
+        CreatedBy,
+      </if>
+      <if test="lastupdatedtime != null">
+        LastUpdatedTime,
+      </if>
+      <if test="lastupdatedby != null">
+        LastUpdatedBy,
+      </if>
+      <if test="mstatus != null">
+        Mstatus,
+      </if>
+      <if test="subtitle != null">
+        SubTitle,
+      </if>
+      <if test="defaultnotion != null">
+        DefaultNotion,
+      </if>
+      <if test="meetingtype != null">
+        MeetingType,
+      </if>
+      <if test="iscurrent != null">
+        IsCurrent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="meetingpassword != null">
+        #{meetingpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="organizer != null">
+        #{organizer,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="logourl != null">
+        #{logourl,jdbcType=VARCHAR},
+      </if>
+      <if test="starttime != null">
+        #{starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtime != null">
+        #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="meetingdays != null">
+        #{meetingdays,jdbcType=DECIMAL},
+      </if>
+      <if test="meetingdocurl != null">
+        #{meetingdocurl,jdbcType=VARCHAR},
+      </if>
+      <if test="securityclassification != null">
+        #{securityclassification,jdbcType=VARCHAR},
+      </if>
+      <if test="createdtime != null">
+        #{createdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null">
+        #{createdby,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupdatedtime != null">
+        #{lastupdatedtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdatedby != null">
+        #{lastupdatedby,jdbcType=VARCHAR},
+      </if>
+      <if test="mstatus != null">
+        #{mstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="subtitle != null">
+        #{subtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultnotion != null">
+        #{defaultnotion,jdbcType=VARCHAR},
+      </if>
+      <if test="meetingtype != null">
+        #{meetingtype,jdbcType=VARCHAR},
+      </if>
+      <if test="iscurrent != null">
+        #{iscurrent,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.demo5.modules.sys.entity.MeetingInfo">
+    update ms_meetinginfo
+    <set>
+      <if test="meetingpassword != null">
+        MeetingPassword = #{meetingpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        Title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="organizer != null">
+        Organizer = #{organizer,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        Address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="logourl != null">
+        LogoUrl = #{logourl,jdbcType=VARCHAR},
+      </if>
+      <if test="starttime != null">
+        StartTime = #{starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtime != null">
+        EndTime = #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="meetingdays != null">
+        MeetingDays = #{meetingdays,jdbcType=DECIMAL},
+      </if>
+      <if test="meetingdocurl != null">
+        MeetingDocUrl = #{meetingdocurl,jdbcType=VARCHAR},
+      </if>
+      <if test="securityclassification != null">
+        SecurityClassification = #{securityclassification,jdbcType=VARCHAR},
+      </if>
+      <if test="createdtime != null">
+        CreatedTime = #{createdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdby != null">
+        CreatedBy = #{createdby,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupdatedtime != null">
+        LastUpdatedTime = #{lastupdatedtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdatedby != null">
+        LastUpdatedBy = #{lastupdatedby,jdbcType=VARCHAR},
+      </if>
+      <if test="mstatus != null">
+        Mstatus = #{mstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="subtitle != null">
+        SubTitle = #{subtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultnotion != null">
+        DefaultNotion = #{defaultnotion,jdbcType=VARCHAR},
+      </if>
+      <if test="meetingtype != null">
+        MeetingType = #{meetingtype,jdbcType=VARCHAR},
+      </if>
+      <if test="iscurrent != null">
+        IsCurrent = #{iscurrent,jdbcType=BIT},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.demo5.modules.sys.entity.MeetingInfo">
+    update ms_meetinginfo
+    set MeetingPassword = #{meetingpassword,jdbcType=VARCHAR},
+      Title = #{title,jdbcType=VARCHAR},
+      Organizer = #{organizer,jdbcType=VARCHAR},
+      Address = #{address,jdbcType=VARCHAR},
+      LogoUrl = #{logourl,jdbcType=VARCHAR},
+      StartTime = #{starttime,jdbcType=TIMESTAMP},
+      EndTime = #{endtime,jdbcType=TIMESTAMP},
+      MeetingDays = #{meetingdays,jdbcType=DECIMAL},
+      MeetingDocUrl = #{meetingdocurl,jdbcType=VARCHAR},
+      SecurityClassification = #{securityclassification,jdbcType=VARCHAR},
+      CreatedTime = #{createdtime,jdbcType=TIMESTAMP},
+      CreatedBy = #{createdby,jdbcType=VARCHAR},
+      LastUpdatedTime = #{lastupdatedtime,jdbcType=TIMESTAMP},
+      LastUpdatedBy = #{lastupdatedby,jdbcType=VARCHAR},
+      Mstatus = #{mstatus,jdbcType=VARCHAR},
+      SubTitle = #{subtitle,jdbcType=VARCHAR},
+      DefaultNotion = #{defaultnotion,jdbcType=VARCHAR},
+      MeetingType = #{meetingtype,jdbcType=VARCHAR},
+      IsCurrent = #{iscurrent,jdbcType=BIT}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

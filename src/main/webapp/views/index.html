@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml">
+<head><meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>
+	评审系统
+</title><link href="/app/css/themes/default/jquery-ui.css" rel="stylesheet" type="text/css" />
+<link href="/app/css/themes/Wijmo/jquery.wijmo.wijupload.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="/app/css/style.css" />
+<link rel="stylesheet" href="/app/css/main.css" />
+    
+    <script type="text/javascript">
+        var REFRESH = false;
+        var PAGE = 1;
+        var PAGEJSON;
+        var PasPage = true;
+        function setRefresh(value) {
+            REFRESH = value;
+        }
+
+        function getRefresh() {
+            return REFRESH;
+        }
+
+        function setPage(value, json) {
+            PAGEJSON = json;
+            PAGE = value;
+        }
+
+        function getPage() {
+            return PAGE + "&&" + PAGEJSON;
+        }
+
+        var RootPage = true;
+        function SetCwinHeight() {
+
+            var cwin = document.getElementById("contentFrame");
+            var iheight = 0;
+            try {
+                
+                if (document.getElementById) {
+
+                    if (cwin && !window.opera) {
+
+                        if (cwin.contentDocument && cwin.contentWindow.document.documentElement.scrollHeight) {
+                            iheight = cwin.contentWindow.document.documentElement.scrollHeight;
+                        }
+                        else if (cwin.Document && cwin.Document.body) {
+                            iheight = cwin.Document.body.scrollHeight;
+                           
+                            
+                        }
+                        if (iheight == $(cwin).height()) return;
+
+                        if (iheight < 658) iheight = 658;
+
+                        cwin.style.height = iheight;
+                        $(cwin).height(iheight);
+
+
+
+                    }
+                }
+            } catch (e) { }
+
+        }
+
+
+        function totop() {
+            window.scroll(0, 0);
+        }
+
+       
+
+
+
+        window.setInterval(function () { SetCwinHeight(); }, 500);
+
+
+    </script>
+
+</head>
+<body>
+    <form method="post" action="" id="form1">
+
+    <div class="content">
+        <div class="header">
+             <div class="header_name"><img src="/app/images/xt_name.png"  style="display:none;" />
+             管理系统
+             </div>
+            <div class="header_user">
+                <ul>
+                    <li>
+                        <img src="/app/images/head_user.png" width="25" height="24" />欢迎您：test002</li>
+                    <li>
+                        <img src="/app/images/head_key.png" width="25" height="24" /><a href="/Admin/ChangePassword.aspx" target="contentFrame">修改密码</a></li>
+                    <li>
+                        <img src="/app/images/head_quit.png" width="25" height="24" /> <a id="cphMain_lbLogout" href="javascript:void(0);">退出</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td valign="top" style="width:150px;background-color:#ECEEF0; border-right:1px solid #cccccc;">
+                        <div class="left">
+                            <div class="menu_list">
+                                
+    <ul>
+        
+        
+        <li class="list_i01">
+        <a href='/app/views/admin/meetingList.html' target="contentFrame">
+            会议管理</a>
+            
+        </li>
+        
+        <li class="list_i01">
+        <a href='/app/views/admin/FirstReviewMeetingList.html' target="contentFrame">
+            初评管理</a>
+            
+        </li>
+        
+        <li class="list_i01">
+        <a href='/app/views/admin/FinalReviewMeetingList.html' target="contentFrame">
+            复评管理</a>
+            
+        </li>
+        
+        <li class="list_i01">
+        <a href='/app/views/admin/ExpertPersonList.html' target="contentFrame">
+            专家管理</a>
+            
+        </li>
+        
+        <li class="list_i01">
+        <a  target="contentFrame">
+            系统管理</a>
+            
+            <ul class="menu_two">
+                
+                <li><a href="/app/views/admin/userList.html" target="contentFrame">
+                    用户管理</a></li>
+                
+            </ul>
+            
+        </li>
+        
+    </ul>
+
+                                 <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td valign="top">
+                        <div class="right" >
+                            
+    <iframe id="contentFrame" name="contentFrame" src="/app/views/admin/meetingList.html" scrolling="no" style="width: 100%;
+        text-align: left; vertical-align: top; scrollbar-face-color: #eeeeee; scrollbar-highlight-color: #eeeeee;
+        scrollbar-shadow-color: #eeeeee; scrollbar-3dlight-color: #cccccc; scrollbar-arrow-color: black;
+        scrollbar-track-color: #f6f6f6; scrollbar-darkshadow-color: #cccccc; scrollbar-base-color: #eeeeee;"
+        frameborder="0"  ></iframe>
+
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    <!--Head start-->
+   
+  
+    <script type="text/javascript" language="javascript" src="/app/scripts/jquery-1.8.0.min.js"></script>
+   
+    <script type="text/javascript">
+//        $.fn.bootstrapBtn = $.fn.button.noConflict();
+    </script>
+    <script language="javascript" type="text/javascript" src="/app/scripts/knockout/knockout-2.1.0.js"></script>
+    <script language="javascript" type="text/javascript" src="/app/scripts/knockout/knockout.mapping.js"></script>
+    <script type="text/javascript" language="javascript" src="/app/scripts/jquery-ui-1.9.0.custom.min.js"></script>
+    <script src="/app/scripts/jquery.ui.datepicker-zh-CN.js" type="text/javascript"></script>
+    <script type="text/javascript" language="javascript" src="/app/scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/app/scripts/wisui/wiscore.js"></script>
+    <script type="text/javascript" language="javascript" src="/app/scripts/wisui/wiscontrol.js"></script>
+    <script type="text/javascript" language="javascript" src="/app/scripts/pas_wiscontrol.js"></script>
+    <script type="text/javascript" language="javascript" src="/app/scripts/wisui/wisgrid.js"></script>
+    <script type="text/javascript" language="javascript" src="/app/scripts/wisui/wisupload.js"></script>
+    <script type="text/javascript" language="javascript" src="/app/scripts/wisUI-lang-zh_cn.js"></script>
+    <script language="javascript" type="text/javascript" src="/app/scripts/wijmo/jquery.wijmo-open.all.2.2.0.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/app/scripts/wijmo/source/jquery.wijmo.wijupload.js"></script>
+    <script type="text/javascript" language="javascript" src="/app/scripts/wisui/wisvalidate.js"></script>
+    
+    <script type="text/javascript" language="javascript" src="/app/scripts/cookiehelp.js"></script>
+    <script type="text/javascript" language="javascript" src="/app/scripts/message.js"></script>
+<script type="text/javascript" language="javascript" src="/app/scripts/Common.js"></script>
+
+    
+  
+    <script type="text/javascript">
+        jQuery(function () {
+
+          
+            jQuery(".list_i01").bind("click", function () {
+                
+                jQuery(".list_i01").removeClass("active");
+                jQuery(this).addClass("active");
+            });
+            jQuery(".menu_two li").bind("click", function () {
+
+                jQuery(".list_i01 li").removeClass("subactive");
+                jQuery(this).addClass("subactive");
+            });
+        });
+    </script>
+
+
+    <!--Head end-->
+    </form>
+</body>
+</html>

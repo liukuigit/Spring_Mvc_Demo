@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd" >
+	
+	<import resource="core/application-core.xml"/>
+	
+	<bean id="dataSource" parent="baseDataSource"  p:url="${jdbc.url}" p:username="${jdbc.username}" p:password="${jdbc.password}"></bean>
+	 
+	 <import resource="mybatis/application-data-dao.xml"/>
+	 
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	<!-- 处理静态文件 -->
+    <mvc:default-servlet-handler/>
+    
+    <mvc:resources mapping="/scripts/**" location="/views/modules/resources/scripts/" />
+     <mvc:resources mapping="/css/**" location="/views/modules/resources/css/" />
+     <mvc:resources mapping="/images/**" location="/views/modules/resources/images/" />
+    <mvc:resources mapping="/*.html" location="/views/" />
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven>
+    <mvc:message-converters>
+    	<bean
+			class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+			<property name="objectMapper">
+			<bean class="com.demo5.common.utils.converter.ResponseNullUtil"></bean>
+			</property> 
+		</bean>
+    </mvc:message-converters>
+    </mvc:annotation-driven>
+
+	 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		 <property name="prefix" value="/views/" />
+		<property name="suffix" value="" />   
+	</bean> 
+	
+	
+	<!-- 第三步：注册处理器映射器/处理器适配器 ，添加conversion-service属性-->
+    <mvc:annotation-driven conversion-service="conversionService"/>
+   
+    <!-- 第二步： 创建convertion-Service ，并注入dateConvert-->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <ref bean="dateConvert"/>
+            </set>
+        </property>
+    </bean>
+    <!-- 第一步:  创建自定义日期转换规则 -->   
+    <bean id="dateConvert" class="com.demo5.common.utils.date.DateConvert"/>
+	
+	<bean id="sqliteDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+<!--       <property name="password" value="test" /> -->
+     <property name="driverClassName" value="org.sqlite.JDBC" />
+     <property name="url" value="${sqlite.jdbc.path}" />
+     <property name="filters" value="stat" />
+     <property name="maxActive" value="20" />
+     <property name="initialSize" value="1" />
+     <property name="maxWait" value="60000" />
+     <property name="minIdle" value="1" />
+     <property name="timeBetweenEvictionRunsMillis" value="60000" />
+     <property name="minEvictableIdleTimeMillis" value="300000" />
+     <property name="testWhileIdle" value="true" />
+     <property name="testOnBorrow" value="false" />
+     <property name="testOnReturn" value="false" />
+     <property name="poolPreparedStatements" value="true" />
+<!--      <property name="maxOpenPreparedStatements" value="20" /> -->
+    </bean>
+
+	<bean id="sysApplicationContext" class="com.demo5.common.utils.spring.SysApplicationContext"></bean>
+
+</beans>
