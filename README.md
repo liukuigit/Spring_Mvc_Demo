@@ -1,2 +1,2 @@
-# Spring_Mvc_Demo
-Spring_Mvc_Demo
+# Spring Mvc + MyBatis + shiro
+Spring Mvc + MyBatis + shiro
